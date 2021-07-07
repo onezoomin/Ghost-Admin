@@ -39,6 +39,9 @@
 @import "components/codemirror.css";
 @import "components/lists.css";
 @import "components/tabs.css";
+@import "components/browser-preview.css";
+@import "components/stacks.css";
+@import "components/browser-preview.css";
 
 
 /* Layouts: Groups of Components
@@ -60,6 +63,10 @@
 @import "layouts/labs.css";
 @import "layouts/whats-new.css";
 @import "layouts/preview-email.css";
+@import "layouts/portal-settings.css";
+@import "layouts/billing.css";
+@import "layouts/fullscreen-wizard.css";
+@import "layouts/post-preview.css";
 
 
 :root {
@@ -240,13 +247,13 @@ input:focus,
     stroke-width: 2px;
 }
 
-.dropdown-menu > li > a,
-.dropdown-menu > li > button {
+.dropdown-menu li > a,
+.dropdown-menu li > button {
     color: color-mod(var(--lightgrey) lightness(+20%));
 }
 
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus,
-.dropdown-menu > li > button:hover, .dropdown-menu > li > button:focus {
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus,
+.dropdown-menu li > button:hover, .dropdown-menu li > button:focus {
     color: var(--lightgrey);
     background: color-mod(var(--dark-main-bg-color) l(-2%));
 }
@@ -303,12 +310,12 @@ input:focus,
     background: var(--lightgrey);
 }
 
-.dropdown-menu > li > a, .dropdown-menu > li > button {
+.dropdown-menu li > a, .dropdown-menu li > button {
     color: var(--darkgrey);
 }
 
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus,
-.dropdown-menu > li > button:hover, .dropdown-menu > li > button:focus {
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus,
+.dropdown-menu li > button:hover, .dropdown-menu li > button:focus {
     color: #fff;
 }
 
@@ -354,6 +361,10 @@ input:focus,
 }
 
 .gh-markdown-editor .CodeMirror-cursor {
+    border-color: #fff;
+}
+
+.koenig-card-html--editor .CodeMirror-cursor {
     border-color: #fff;
 }
 
@@ -422,6 +433,19 @@ input:focus,
     background: #212A2E;
 }
 
+.settings-code-editor .CodeMirror-gutters,
+.settings-code code {
+    background-color: var(--white);
+}
+
+.settings-code-editor .CodeMirror {
+    background: var(--white);
+}
+
+.gh-branding-image-container.transparent-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ERectangle%3C/title%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath fill='%23303e46' d='M0 0h24v24H0z'/%3E%3Cpath fill='%233e515b' d='M0 0h12v12H0zM12 12h12v12H12z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
 .id-item {
     background: #212A2E;
 }
@@ -434,11 +458,16 @@ input:focus,
     color: color-mod(#183691 l(+25%));
 }
 
-.id-mailchimp img,
+.id-github img,
 .id-typeform img,
 .id-buffer img,
+.id-unsplash,
 .id-more img {
     filter: invert(100%);
+}
+
+.dark-no-shadow {
+    box-shadow: none;
 }
 
 .gh-nav {
@@ -453,8 +482,13 @@ input:focus,
 .gh-nav-list .gh-secondary-action:hover span,
 .gh-nav-bottom .ember-basic-dropdown-trigger:hover,
 .gh-nav-list .active,
-.gh-nav-btn-search:hover {
-    background: color-mod(var(--dark-main-bg-color) l(+5%) s(-5%))
+.gh-nav-btn-search:hover,
+.gh-nav-list button.main-menu-item:hover,
+.gh-nav-bottom .ember-basic-dropdown-trigger:hover,
+.gh-nav-bottom-tabicon:hover,
+.gh-nav-bottom-tabicon.active,
+.gh-nav-list .gh-secondary-action:not(.icon-only):hover span {
+    background: color-mod(var(--dark-main-bg-color) l(+5%) s(-5%));
 }
 
 .gh-nav-list .gh-nav-nightshift span svg path {
@@ -470,7 +504,8 @@ input:focus,
 .gh-contentfilter-menu-trigger--active,
 .gh-contentfilter-menu-trigger:focus,
 .tags-container,
-.content-list ol {
+.content-list ol,
+.gh-settings-main-grid {
     background: #212A2E;
 }
 
@@ -479,16 +514,46 @@ input:focus,
 .ember-power-select-group .ember-power-select-option[aria-current=true],
 .gh-list-row:not(.header):not(.loading):hover .gh-list-cell,
 .gh-list-row:not(.header):not(.loading):hover .gh-list-data,
-.settings-tag .tag-edit-button.active {
+.settings-tag .tag-edit-button.active,
+.gh-portal-site-frame-cover {
     background: color-mod(var(--dark-main-bg-color) l(-2%));
+}
+
+.gh-browserpreview-browser {
+    background: color-mod(var(--dark-main-bg-color) l(-6%));
 }
 
 .tag-settings .gh-image-uploader {
     background-color: transparent;
 }
 
-/* Dark style Lists */
+.gh-settings-main-grid .gh-setting-group span {
+    background: color-mod(var(--dark-main-bg-color) l(+2%));
+}
 
+.gh-settings-main-grid .gh-setting-group:hover span {
+    background: color-mod(var(--dark-main-bg-color) l(+4%));
+}
+
+.nightshift-toggle {
+    background: #2d3d42;
+}
+
+.nightshift-toggle .thumb {
+    background: var(--midlightgrey-d2);
+}
+
+.nightshift-toggle .moon svg {
+    color: var(--midlightgrey-d2);
+}
+
+/* Koenig styles */
+.kg-link-input {
+    border-color: var(--blue) !important;
+}
+
+
+/* Dark style Lists */
 .gh-list {
     background: #212A2E;
 }
@@ -500,10 +565,33 @@ input:focus,
     background: color-mod(var(--lightgrey) l(-9%));
 }
 
+
 /* Members */
 .gh-members-chart-header {
     background: color-mod(var(--lightgrey) l(-9%));
 }
 .gh-members-chart-header .gh-contentfilter-type .gh-contentfilter-menu-trigger {
     box-shadow: 0 0 0 1px color-mod(var(--darkgrey) l(-27%) blackness(+15%) alpha(50%));
+}
+
+.gh-members-import-table::before {
+    background: #212A2E;
+}
+
+.gh-members-import-table::after {
+    background: #212A2E;
+}
+.gh-import-member-select,
+.gh-import-member-select select {
+    background: none !important;
+}
+
+.modal-fullsettings-preview-container,
+.fullscreen-modal-email-preview .gh-pe-mobile-container,
+.fullscreen-modal-email-preview .gh-pe-desktop-container {
+    background: #1D252B;
+}
+
+.gh-pe-mobile-bezel {
+    background: #2b373e;
 }

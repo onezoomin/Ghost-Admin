@@ -1,55 +1,45 @@
-import Component from '@ember/component';
-import {alias, equal} from '@ember/object/computed';
-import {computed} from '@ember/object';
-import {isBlank} from '@ember/utils';
+import Component from '@glimmer/component';
+import {action} from '@ember/object';
+import {formatPostTime} from 'ghost-admin/helpers/gh-format-post-time';
 import {inject as service} from '@ember/service';
+import {tracked} from '@glimmer/tracking';
 
-export default Component.extend({
-    ghostPaths: service(),
-    session: service(),
+export default class GhPostsListItemComponent extends Component {
+    @service feature;
+    @service session;
+    @service settings;
 
-    tagName: 'li',
-    classNames: ['gh-list-row', 'gh-posts-list-item'],
+    @tracked isHovered = false;
 
-    post: null,
+    get authorNames() {
+        return this.args.post.authors.map(author => author.name || author.email).join(', ');
+    }
 
-    isFeatured: alias('post.featured'),
-    isPage: alias('post.page'),
-    isDraft: equal('post.status', 'draft'),
-    isPublished: equal('post.status', 'published'),
-    isScheduled: equal('post.status', 'scheduled'),
+    get sendEmailWhenPublished() {
+        let {post} = this.args;
+        return post.emailRecipientFilter && post.emailRecipientFilter !== 'none';
+    }
 
-    authorNames: computed('post.authors.[]', function () {
-        let authors = this.get('post.authors');
+    get scheduledText() {
+        let {post} = this.args;
+        let text = [];
 
-        return authors.map(author => author.get('name') || author.get('email')).join(', ');
-    }),
+        let formattedTime = formatPostTime(
+            post.publishedAtUTC,
+            {timezone: this.settings.get('timezone'), scheduled: true}
+        );
+        text.push(formattedTime);
 
-    primaryTag: computed('post.authors.[]', function () {
-        let primaryTag = this.get('post.tags.firstObject');
+        return text.join(' ');
+    }
 
-        if (primaryTag) {
-            return primaryTag.get('name');
-        } else {
-            return false;
-        }
-    }),
+    @action
+    mouseOver() {
+        this.isHovered = true;
+    }
 
-    subText: computed('post.{excerpt,customExcerpt,metaDescription}', function () {
-        let text = this.get('post.excerpt') || '';
-        let customExcerpt = this.get('post.customExcerpt');
-        let metaDescription = this.get('post.metaDescription');
-
-        if (!isBlank(customExcerpt)) {
-            text = customExcerpt;
-        } else if (!isBlank(metaDescription)) {
-            text = metaDescription;
-        }
-
-        if (this.isScheduled) {
-            return `${text.slice(0, 35)}...`;
-        } else {
-            return `${text.slice(0, 80)}...`;
-        }
-    })
-});
+    @action
+    mouseLeave() {
+        this.isHovered = false;
+    }
+}

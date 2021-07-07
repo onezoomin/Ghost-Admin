@@ -1,25 +1,14 @@
 {
   "extends": [
-    "@tryghost:base",
-    "@tryghost:automergeSilentTestLintNonMajor"
+    "@tryghost:quietJS"
   ],
   "ignoreDeps": [
     "ember-drag-drop",
     "normalize.css",
     "validator",
-    "ember-in-viewport",
-    "codemirror",
-    "broccoli-concat"
+    "codemirror"
   ],
   "ignorePaths": ["lib/koenig-editor/package.json"],
-  "travis": { "enabled": true },
-  "node": {
-    "supportPolicy": ["lts_latest"]
-  },
-  "separateMinorPatch": true,
-  "patch": {
-    "automerge": true
-  },
   "packageRules": [
     {
       "groupName": "ember-basic-dropdown addons",
@@ -34,8 +23,8 @@
       "packageNames": ["ember-mocha", "ember-exam", "testem"]
     },
     {
-      "groupName": "css processors",
-      "packagePatterns": ["^postcss", "^css", "autoprefixer"]
+      "extends": "@tryghost:groupCSS",
+      "enabled": false
     }
   ]
 }

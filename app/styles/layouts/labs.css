@@ -38,6 +38,18 @@
     stroke: var(--blue);
 }
 
+.gh-labs-disabled .for-checkbox label,
+.gh-labs-disabled .for-checkbox .input-toggle-component,
+.gh-labs-disabled .for-switch label,
+.gh-labs-disabled .for-switch .input-toggle-component
+.gh-labs-disabled .for-radio label,
+.gh-labs-disabled .for-radio .input-toggle-component {
+    cursor: default;
+}
+
+/* Members settings */
+/* ------------------------------------------------ */
+
 .gh-labs-members-radio {
     cursor: pointer;
     margin: 0 8px;
@@ -51,6 +63,9 @@
 .gh-labs-disabled .gh-setting-content, .gh-labs-disabled .gh-setting-action {
     opacity: 0.25;
 }
+
+
+/* Stripe settings */
 
 .gh-members-stripe-info-header {
     display: flex;
@@ -80,6 +95,65 @@
     color: #555ABF;
 }
 
+.gh-members-connectbutton-container {
+    max-width: 380px;
+}
+
+.gh-members-connectbutton-container .for-switch {
+    line-height: 1em;
+}
+
+.gh-members-connectbutton-container .for-switch label {
+    width: 36px !important
+}
+
+.gh-members-connectbutton-container .for-switch input:checked + .input-toggle-component {
+    background: #F1946A;
+}
+
+.gh-members-connect-testmodeon {
+    color: #F1946A;
+}
+
+.gh-members-stripe-connect-token {
+    background: var(--whitegrey-l2);
+    min-height: unset;
+    height: 73px;
+    max-width: 380px;
+    font-family: var(--font-family-mono);
+    font-size: 1.3rem;
+    resize: none;
+}
+
+.gh-members-connect-testmodelabel {
+    display: inline-block;
+    background: #f8e5b9;
+    color: #983705;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1em;
+    border-radius: 999px;
+    padding: 4px 8px;
+}
+
+.gh-members-connect-savecontainer {
+    height: 0px;
+    overflow-y: hidden;
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.gh-members-connect-savecontainer.expanded {
+    margin-bottom: 20px;
+}
+
+.gh-members-connect-savecontainer.expanded {
+    height: 36px;
+    opacity: 1.0;
+}
+
 @media (max-width: 500px) {
     .gh-members-stripe-info-header {
         flex-direction: column;
@@ -103,13 +177,17 @@
     }
 }
 
-.gh-labs-disabled .for-checkbox label,
-.gh-labs-disabled .for-checkbox .input-toggle-component,
-.gh-labs-disabled .for-switch label,
-.gh-labs-disabled .for-switch .input-toggle-component
-.gh-labs-disabled .for-radio label,
-.gh-labs-disabled .for-radio .input-toggle-component {
-    cursor: default;
+.gh-labs-members-emailinput {
+
+}
+
+.gh-labs-members-emaildropdown {
+    min-width: 208px;
+    margin-left: 8px;
+}
+
+.gh-labs-members-defaultemaildd {
+    padding-right: 216px;
 }
 
 .gh-labs-mailgun-region {

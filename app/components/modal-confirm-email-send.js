@@ -1,16 +1,34 @@
 import ModalComponent from 'ghost-admin/components/modal-base';
+import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 import {task} from 'ember-concurrency';
 
 export default ModalComponent.extend({
     session: service(),
+    store: service(),
 
     errorMessage: null,
+    paidMemberCount: null,
+    freeMemberCount: null,
 
     // Allowed actions
     confirm: () => {},
 
-    confirmAndCheckError: task(function* () {
+    countPaidMembers: action(function () {
+        // TODO: remove editor conditional once editors can query member counts
+        if (['free', 'paid'].includes(this.model.sendEmailWhenPublished) && !this.session.get('user.isEditor')) {
+            this.countPaidMembersTask.perform();
+        }
+    }),
+
+    countPaidMembersTask: task(function* () {
+        const result = yield this.store.query('member', {filter: 'subscribed:true+status:paid', limit: 1, page: 1});
+        this.set('paidMemberCount', result.meta.pagination.total);
+        const freeMemberCount = this.model.memberCount - result.meta.pagination.total;
+        this.set('freeMemberCount', freeMemberCount);
+    }),
+
+    confirmAndCheckErrorTask: task(function* () {
         try {
             yield this.confirm();
             this.closeModal();

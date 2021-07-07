@@ -98,7 +98,7 @@
 .gh-nav {
     position: relative;
     z-index: 800;
-    flex: 0 0 268px;
+    flex: 0 0 300px;
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -116,11 +116,11 @@
 }
 
 .gh-nav-menu-dropdown .dropdown-menu {
-    top: -315px;
-    left: 30px;
+    top: -344px;
+    left: 20px;
     margin: 10px 0 0;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.1), 0 0 3px rgba(0, 0, 0, 0.08), 0 18px 45px -5px rgba(0, 0, 0, 0.15);
-    min-width: 244px;
+    min-width: 280px;
     padding: 6px 0;
 }
 
@@ -129,7 +129,7 @@
     font-size: 1.4rem;
     margin: 0;
     width: unset;
-    padding: 7px 14px 8px;
+    padding: 10px 24px 11px;
 }
 
 .gh-nav-menu-dropdown .dropdown-menu>li>button {
@@ -295,7 +295,7 @@
 
 .gh-nav-list .gh-nav-list-h {
     overflow: hidden;
-    padding: 10px 20px;
+    padding: 10px 27px;
     color:  color-mod(var(--darkgrey));
     text-overflow: ellipsis;
     text-transform: uppercase;
@@ -306,15 +306,20 @@
     font-weight: 500;
 }
 
-.gh-nav-list a {
+.gh-nav-list a,
+.gh-nav-list button.main-menu-item {
     display: flex;
     align-items: center;
-    padding: 6px 32px;
+    padding: 6px 23px;
     color: color-mod(var(--middarkgrey) l(-10%));
     transition: none;
     margin: 2px 5px;
     font-weight: 400;
     border-radius: 5px;
+}
+
+.gh-nav-list button.main-menu-item {
+    width: calc(100% - 12px);
 }
 
 .gh-nav-list .active {
@@ -324,7 +329,8 @@
     font-weight: 700;
 }
 
-.gh-nav-list a:not(.active):hover {
+.gh-nav-list a:not(.active):hover,
+.gh-nav-list button.main-menu-item:hover {
     color: var(--darkgrey);
     background: var(--menu-hover-bg-color);
     opacity: 1;
@@ -340,7 +346,12 @@
     transition: none;
 }
 
-.gh-nav-list a:not(.active):hover svg {
+.gh-nav-list svg.force-fill path {
+    fill: var(--midgrey);
+}
+
+.gh-nav-list a:not(.active):hover svg,
+.gh-nav-list button.main-menu-item:hover svg {
     fill: var(--darkgrey);
 }
 
@@ -348,7 +359,8 @@
     fill: var(--active-menu-color);
 }
 
-.gh-nav-list a svg g {
+.gh-nav-list a svg g,
+.gh-nav-list button.main-menu-item svg g {
     stroke: var(--midgrey);
 }
 
@@ -358,6 +370,25 @@
 
 .gh-nav-list .active svg g {
     stroke: var(--active-menu-color);
+}
+
+.gh-nav-button-expand.expanded {
+    padding-left: 9px;
+}
+
+.gh-nav-button-expand svg {
+    width: 9px;
+    height: 9px;
+    margin-bottom: 1px;
+}
+
+.gh-nav-button-expand svg path {
+    stroke-width: 2.0px;
+    stroke: var(--midgrey);
+}
+
+.gh-nav-button-expand:hover svg path {
+    stroke: color-mod(var(--darkgrey) l(-5%));
 }
 
 .gh-nav-list .gh-secondary-action {
@@ -394,7 +425,7 @@
     fill: var(--middarkgrey);
 }
 
-.gh-nav-list .gh-secondary-action:hover span {
+.gh-nav-list .gh-secondary-action:not(.icon-only):hover span {
     background: var(--active-menu-bg-color);
 }
 
@@ -406,6 +437,17 @@
 
 .gh-nav-list .gh-secondary-action:hover span svg path {
     fill: var(--darkgrey);
+}
+
+.gh-nav-list .gh-secondary-action.icon-only,
+.gh-nav-list .gh-secondary-action.icon-only span {
+    pointer-events: none;
+    transition: none;
+}
+
+.gh-nav-list .gh-secondary-action.icon-only.arrow svg {
+    width: 16px;
+    height: 16px;
 }
 
 .gh-nav-list .gh-nav-new-post span svg {
@@ -426,18 +468,196 @@
     padding: 0;
 }
 
+.gh-nav-pro .gh-btn-green {
+    margin: 7px 10px 7px 20px !important;
+    width: calc(100% - 40px) !important;
+}
+
+.gh-nav-view-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size: 1.4rem;
+    line-height: 1.6em;
+}
+
+.gh-nav-view-list a {
+    padding-left: 48px;
+    padding-right: 12px;
+}
+
+.gh-nav-viewname {
+    display: inline-block;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gh-nav-view-list .circle {
+    display: block;
+    border-radius: 999px;
+    border: 3px solid var(--midgrey);
+    width: 12px;
+    height: 12px;
+    margin: 0 10px 0 2px;
+}
+
+.gh-nav-view-list .svg-midgrey .circle {
+    border-color: var(--midgrey);
+    background: var(--midgrey);
+}
+
+.gh-nav-view-list .svg-blue .circle {
+    border-color: var(--blue);
+    background: var(--blue);
+}
+
+.gh-nav-view-list .svg-green .circle {
+    border-color: var(--green);
+    background: var(--green);
+}
+
+.gh-nav-view-list .svg-red .circle {
+    border-color: var(--red);
+    background: var(--red);
+}
+
+.gh-nav-view-list .svg-teal .circle {
+    border-color: #4dcddc;
+    background: #4dcddc;
+}
+
+.gh-nav-view-list .svg-purple .circle {
+    border-color: var(--purple);
+    background: var(--purple);
+}
+
+.gh-nav-view-list .svg-yellow .circle {
+    border-color: var(--yellow);
+    background: var(--yellow);
+}
+
+.gh-nav-view-list .svg-orange .circle {
+    border-color: #fe8b05;
+    background: #fe8b05;
+}
+
+.gh-nav-view-list .svg-pink .circle {
+    border-color: var(--pink);
+    background: var(--pink);
+}
+
+/* Bottom nav
+/* ---------------------------------------------------------- */
+
 .gh-nav-bottom {
-    margin: 12px 5px 24px;
+    margin: 0 5px;
 }
 
 .gh-nav-bottom .ember-basic-dropdown-trigger:hover {
     background: var(--menu-hover-bg-color);
-    border-radius: 5px;
+    border-radius: 999px;
 }
 
-.gh-nav-pro .gh-btn-green {
-    margin: 7px 10px 7px 20px !important;
-    width: calc(100% - 40px) !important;
+.gh-nav-bottom-tabicon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12px;
+    padding: 10px;
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    line-height: 1;
+}
+
+.gh-nav-bottom-tabicon:hover {
+    background: var(--menu-hover-bg-color);
+}
+
+.gh-nav-bottom-tabicon.active {
+    background: var(--active-menu-bg-color);
+}
+
+.gh-nav-bottom-tabicon.active svg {
+    fill: var(--darkgrey);
+}
+
+.gh-nav-bottom-tabicon svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--midlightgrey-d2);
+    line-height: 1;
+    transition: none;
+}
+
+.gh-nav-bottom-tabicon:last-child[data-tooltip]:before {
+    left: -12px;
+}
+
+.nightshift-toggle-container {
+    padding: 8px 0 8px 12px;
+}
+
+.nightshift-toggle-container[data-tooltip]:before {
+    left: -10px;
+}
+
+.nightshift-toggle {
+    position: relative;
+    height: 24px;
+    width: 42px;
+    background: var(--midlightgrey);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all ease-in-out 0.3s;
+}
+
+.nightshift-toggle .thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--white);
+    border-radius: 999px;
+    transition: all ease-in-out 0.3s;
+}
+
+.nightshift-toggle.on .thumb {
+    position: absolute;
+    left: 20px;
+}
+
+.nightshift-toggle .sun {
+    position: absolute;
+    top: 6px;
+    left: 24px;
+    color: var(--white);
+    line-height: 1;
+}
+
+.nightshift-toggle .moon {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    color: var(--white);
+    line-height: 1;
+}
+
+.nightshift-toggle .sun svg,
+.nightshift-toggle .moon svg {
+    width: 12px;
+    height: 12px;
+    transition: all ease-in-out 0.3s;
+}
+
+.nightshift-toggle .sun svg line,
+.nightshift-toggle .sun svg path,
+.nightshift-toggle .sun svg circle,
+.nightshift-toggle .moon svg path {
+    stroke-width: 2.0px;
 }
 
 /* Mobile Nav Menu (Slides out)
@@ -521,6 +741,12 @@
         text-align: center;
         font-size: 17px;
     }
+
+    .gh-nav-button-expand svg {
+        width: 9px;
+        height: 9px;
+        margin-bottom: 1px;
+    }
 }
 
 /* Mobile Nav Bar (Sits at bottom of screen)
@@ -535,6 +761,12 @@
         padding-bottom: 55px;
     }
 
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        .gh-viewport {
+            padding-bottom: calc(55px + env(safe-area-inset-bottom, 0px));
+        }
+    }
+
     .gh-mobile-nav-bar {
         display: flex;
         align-items: center;
@@ -545,6 +777,12 @@
         right: 0;
         background: #fff;
         border-top: var(--lightgrey) 1px solid;
+    }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        .gh-mobile-nav-bar {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
     }
 
     .gh-mobile-nav-bar a,
@@ -655,10 +893,9 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    margin: -3px 0 0 1px;
+    margin: -3px 0 0 0;
     padding: 0;
     text-overflow: ellipsis;
-    text-indent: -1px;
     white-space: nowrap;
     font-size: 2.8rem;
     line-height: 1.2em;
@@ -688,6 +925,15 @@
     width: 0.6em;
     height: 0.6em;
     margin: 0 10px;
+}
+
+.gh-btn-edit-view {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.gh-canvas-title:hover .gh-btn-edit-view {
+    opacity: 1.0;
 }
 
 /* What's new badges

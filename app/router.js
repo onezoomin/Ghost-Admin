@@ -1,5 +1,5 @@
 import EmberRouter from '@ember/routing/router';
-import config from './config/environment';
+import config from 'ghost-admin/config/environment';
 import ghostPaths from 'ghost-admin/utils/ghost-paths';
 
 const Router = EmberRouter.extend({
@@ -20,8 +20,15 @@ Router.map(function () {
     this.route('signout');
     this.route('signup', {path: '/signup/:token'});
     this.route('reset', {path: '/reset/:token'});
+
     this.route('about');
     this.route('site');
+    this.route('dashboard');
+    this.route('launch');
+
+    this.route('billing', function () {
+        this.route('billing-sub', {path: '/*sub'});
+    });
 
     this.route('posts');
     this.route('pages');
@@ -39,23 +46,29 @@ Router.map(function () {
     this.route('tag.new', {path: '/tags/new'});
     this.route('tag', {path: '/tags/:tag_slug'});
 
+    this.route('settings');
     this.route('settings.general', {path: '/settings/general'});
-    this.route('settings.labs', {path: '/settings/labs'});
+    this.route('settings.members-email', {path: '/settings/members-email'});
+    this.route('settings.members-payments', {path: '/settings/members-payments'});
     this.route('settings.code-injection', {path: '/settings/code-injection'});
-    this.route('settings.design', {path: '/settings/design'}, function () {
+    this.route('settings.theme', {path: '/settings/theme'}, function () {
         this.route('uploadtheme');
     });
-    this.route('settings.integrations', {path: '/settings/integrations'}, function () {
+    this.route('settings.navigation', {path: '/settings/navigation'});
+    this.route('settings.labs', {path: '/settings/labs'});
+
+    this.route('integrations', function () {
         this.route('new');
     });
-    this.route('settings.integration', {path: '/settings/integrations/:integration_id'}, function () {
+    this.route('integration', {path: '/integrations/:integration_id'}, function () {
         this.route('webhooks.new', {path: 'webhooks/new'});
         this.route('webhooks.edit', {path: 'webhooks/:webhook_id'});
     });
-    this.route('settings.integrations.slack', {path: '/settings/integrations/slack'});
-    this.route('settings.integrations.amp', {path: '/settings/integrations/amp'});
-    this.route('settings.integrations.unsplash', {path: '/settings/integrations/unsplash'});
-    this.route('settings.integrations.zapier', {path: '/settings/integrations/zapier'});
+    this.route('integrations.slack', {path: '/integrations/slack'});
+    this.route('integrations.amp', {path: '/integrations/amp'});
+    this.route('integrations.firstpromoter', {path: '/integrations/firstpromoter'});
+    this.route('integrations.unsplash', {path: '/integrations/unsplash'});
+    this.route('integrations.zapier', {path: '/integrations/zapier'});
 
     this.route('members', function () {
         this.route('import');

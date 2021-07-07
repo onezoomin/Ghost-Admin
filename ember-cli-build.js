@@ -4,12 +4,12 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const concat = require('broccoli-concat');
 const mergeTrees = require('broccoli-merge-trees');
-const uglify = require('broccoli-uglify-sourcemap');
+const Terser = require('broccoli-terser-sourcemap');
 const Funnel = require('broccoli-funnel');
 const environment = EmberApp.env();
 const isProduction = environment === 'production';
 
-const postcssEasyImport = require('postcss-easy-import');
+const postcssImport = require('postcss-import');
 const postcssCustomProperties = require('postcss-custom-properties');
 const postcssColorModFunction = require('postcss-color-mod-function');
 const postcssCustomMedia = require('postcss-custom-media');
@@ -50,7 +50,7 @@ const codemirrorAssets = function () {
             });
 
             if (isProduction) {
-                jsTree = uglify(jsTree);
+                jsTree = new Terser(jsTree);
             }
 
             let mergedTree = mergeTrees([tree, jsTree]);
@@ -88,7 +88,7 @@ const simplemdeAssets = function () {
             });
 
             if (isProduction) {
-                jsTree = uglify(jsTree);
+                jsTree = new Terser(jsTree);
             }
 
             let mergedTree = mergeTrees([tree, jsTree]);
@@ -145,6 +145,10 @@ module.exports = function (defaults) {
                 }
             }
         },
+        minifyCSS: {
+            // postcss already handles minification and this was stripping required CSS
+            enabled: false
+        },
         nodeAssets: {
             codemirror: codemirrorAssets(),
             simplemde: simplemdeAssets()
@@ -154,7 +158,7 @@ module.exports = function (defaults) {
                 enabled: true,
                 plugins: [
                     {
-                        module: postcssEasyImport,
+                        module: postcssImport,
                         options: {
                             path: ['app/styles']
                         }

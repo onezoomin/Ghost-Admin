@@ -19,13 +19,13 @@ describe('Acceptance: Setup', function () {
         await authenticateSession();
 
         await visit('/setup/one');
-        expect(currentURL()).to.equal('/site');
+        expect(currentURL()).to.equal('/dashboard');
 
         await visit('/setup/two');
-        expect(currentURL()).to.equal('/site');
+        expect(currentURL()).to.equal('/dashboard');
 
         await visit('/setup/three');
-        expect(currentURL()).to.equal('/site');
+        expect(currentURL()).to.equal('/dashboard');
     });
 
     it('redirects to signin if already set up', async function () {
@@ -72,10 +72,6 @@ describe('Acceptance: Setup', function () {
             expect(stepIcons[0], 'first step').to.have.class('active');
             expect(stepIcons[1], 'second step').to.not.have.class('active');
             expect(stepIcons[2], 'third step').to.not.have.class('active');
-
-            // it displays download count (count increments for each ajax call
-            // and polling is disabled in testing so our count should be "1"
-            expect(find('.gh-flow-content em').textContent.trim()).to.equal('1');
 
             await click('.gh-btn-green');
 
@@ -130,7 +126,7 @@ describe('Acceptance: Setup', function () {
 
             // it redirects to the home / "content" screen
             expect(currentURL(), 'url after submitting invites')
-                .to.equal('/site');
+                .to.equal('/dashboard');
 
             // it displays success alert
             expect(findAll('.gh-alert-green').length, 'number of success alerts')
@@ -338,7 +334,7 @@ describe('Acceptance: Setup', function () {
 
             // it redirects to the home / "content" screen
             expect(currentURL(), 'url after submitting invites')
-                .to.equal('/site');
+                .to.equal('/dashboard');
 
             // it displays success alert
             expect(findAll('.gh-alert-green').length, 'number of success alerts')

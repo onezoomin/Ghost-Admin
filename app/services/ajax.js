@@ -128,7 +128,34 @@ export function isHostLimitError(errorOrStatus, payload) {
     }
 }
 
+export class EmailError extends AjaxError {
+    constructor(payload) {
+        super(payload, 'Please verify your email settings');
+    }
+}
+
+export function isEmailError(errorOrStatus, payload) {
+    if (isAjaxError(errorOrStatus)) {
+        return errorOrStatus instanceof EmailError;
+    } else {
+        return get(payload || {}, 'errors.firstObject.type') === 'EmailError';
+    }
+}
+
 /* end: custom error types */
+
+export class AcceptedResponse {
+    constructor(data) {
+        this.data = data;
+    }
+}
+
+export function isAcceptedResponse(errorOrStatus) {
+    if (errorOrStatus === 202) {
+        return true;
+    }
+    return false;
+}
 
 let ajaxService = AjaxService.extend({
     session: service(),
@@ -182,6 +209,10 @@ let ajaxService = AjaxService.extend({
             return new ThemeValidationError(payload);
         } else if (this.isHostLimitError(status, headers, payload)) {
             return new HostLimitError(payload);
+        } else if (this.isEmailError(status, headers, payload)) {
+            return new EmailError(payload);
+        } else if (this.isAcceptedResponse(status)) {
+            return new AcceptedResponse(payload);
         }
 
         let isGhostRequest = GHOST_REQUEST.test(request.url);
@@ -244,6 +275,14 @@ let ajaxService = AjaxService.extend({
 
     isHostLimitError(status, headers, payload) {
         return isHostLimitError(status, payload);
+    },
+
+    isEmailError(status, headers, payload) {
+        return isEmailError(status, payload);
+    },
+
+    isAcceptedResponse(status) {
+        return isAcceptedResponse(status);
     }
 });
 

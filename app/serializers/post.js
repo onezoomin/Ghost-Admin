@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import ApplicationSerializer from 'ghost-admin/serializers/application';
-import EmbeddedRecordsMixin from 'ember-data/serializers/embedded-records-mixin';
+import {EmbeddedRecordsMixin} from '@ember-data/serializer/rest';
 import {pluralize} from 'ember-inflector';
 
 export default ApplicationSerializer.extend(EmbeddedRecordsMixin, {
@@ -39,6 +39,7 @@ export default ApplicationSerializer.extend(EmbeddedRecordsMixin, {
         delete json.uuid;
         delete json.url;
         delete json.send_email_when_published;
+        delete json.email_recipient_filter;
         // Deprecated property (replaced with data.authors)
         delete json.author;
 

@@ -69,10 +69,6 @@ describe('Acceptance: Settings - Code-Injection', function () {
             // has correct page title
             expect(document.title, 'page title').to.equal('Settings - Code injection - Test Blog');
 
-            // highlights nav menu
-            expect(find('[data-test-nav="code-injection"]'), 'highlights nav menu item')
-                .to.have.class('active');
-
             expect(find('[data-test-save-button]').textContent.trim(), 'save button text').to.equal('Save');
 
             expect(findAll('#ghost-head .CodeMirror').length, 'ghost head codemirror element').to.equal(1);
@@ -87,7 +83,7 @@ describe('Acceptance: Settings - Code-Injection', function () {
             let params = JSON.parse(lastRequest.requestBody);
 
             expect(params.settings.findBy('key', 'codeinjection_head').value).to.equal('');
-            expect(find('[data-test-save-button]').textContent.trim(), 'save button text').to.equal('Saved');
+            expect(find('[data-test-save-button]').textContent.trim(), 'save button text').to.equal('Save');
 
             // CMD-S shortcut works
             await triggerEvent('.gh-app', 'keydown', {
@@ -101,7 +97,7 @@ describe('Acceptance: Settings - Code-Injection', function () {
             params = JSON.parse(newRequest.requestBody);
 
             expect(params.settings.findBy('key', 'codeinjection_head').value).to.equal('');
-            expect(find('[data-test-save-button]').textContent.trim(), 'save button text').to.equal('Saved');
+            expect(find('[data-test-save-button]').textContent.trim(), 'save button text').to.equal('Save');
         });
     });
 });

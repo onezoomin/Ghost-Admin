@@ -1,13 +1,15 @@
 import Component from '@ember/component';
 import moment from 'moment';
 import {computed} from '@ember/object';
-import {equal} from '@ember/object/computed';
+import {formatNumber} from 'ghost-admin/helpers/format-number';
 import {isEmpty} from '@ember/utils';
+import {or} from '@ember/object/computed';
 import {inject as service} from '@ember/service';
 
 export default Component.extend({
     feature: service(),
     settings: service(),
+    config: service(),
     session: service(),
     post: null,
     saveType: null,
@@ -17,16 +19,48 @@ export default Component.extend({
     _publishedAtBlogTZ: null,
 
     'data-test-publishmenu-draft': true,
+    showSendEmail: or('session.user.isOwner', 'session.user.isAdmin', 'session.user.isEditor'),
 
-    disableEmailOption: equal('memberCount', 0),
+    disableEmailOption: computed('memberCount', function () {
+        return (this.get('session.user.isOwnerOrAdmin') && this.memberCount === 0);
+    }),
 
-    canSendEmail: computed('feature.labs.members', 'post.{displayName,email}', function () {
-        let membersEnabled = this.feature.get('labs.members');
-        let mailgunIsConfigured = this.get('settings.bulkEmailSettings.isEnabled');
-        let isPost = this.post.displayName === 'post';
+    disableFreeMemberCheckbox: computed('freeMemberCount', function () {
+        return (this.get('session.user.isOwnerOrAdmin') && this.freeMemberCount === 0);
+    }),
+
+    disablePaidMemberCheckbox: computed('paidMemberCount', function () {
+        return (this.get('session.user.isOwnerOrAdmin') && this.paidMemberCount === 0);
+    }),
+
+    freeMemberCountLabel: computed('freeMemberCount', function () {
+        if (this.get('freeMemberCount') !== undefined) {
+            return `(${formatNumber(this.get('freeMemberCount'))})`;
+        }
+        return '';
+    }),
+
+    paidMemberCountLabel: computed('freeMemberCount', function () {
+        if (this.get('freeMemberCount') !== undefined) {
+            return `(${formatNumber(this.get('paidMemberCount'))})`;
+        }
+        return '';
+    }),
+
+    canSendEmail: computed('post.{isPost,email}', 'settings.{mailgunApiKey,mailgunDomain,mailgunBaseUrl}', 'config.mailgunIsConfigured', function () {
+        let mailgunIsConfigured = this.get('settings.mailgunApiKey') && this.get('settings.mailgunDomain') && this.get('settings.mailgunBaseUrl') || this.get('config.mailgunIsConfigured');
+        let isPost = this.post.isPost;
         let hasSentEmail = !!this.post.email;
 
-        return membersEnabled && mailgunIsConfigured && isPost && !hasSentEmail;
+        return mailgunIsConfigured && isPost && !hasSentEmail;
+    }),
+
+    sendEmailToFreeMembersWhenPublished: computed('sendEmailWhenPublished', function () {
+        return ['free', 'all'].includes(this.sendEmailWhenPublished);
+    }),
+
+    sendEmailToPaidMembersWhenPublished: computed('sendEmailWhenPublished', function () {
+        return ['paid', 'all'].includes(this.sendEmailWhenPublished);
     }),
 
     didInsertElement() {
@@ -79,12 +113,31 @@ export default Component.extend({
 
             post.set('publishedAtBlogTime', time);
             return post.validate();
+        },
+
+        toggleSendEmailWhenPublished(type) {
+            let isFree = this.get('sendEmailToFreeMembersWhenPublished');
+            let isPaid = this.get('sendEmailToPaidMembersWhenPublished');
+            if (type === 'free') {
+                isFree = !isFree;
+            } else if (type === 'paid') {
+                isPaid = !isPaid;
+            }
+            if (isFree && isPaid) {
+                this.setSendEmailWhenPublished('all');
+            } else if (isFree && !isPaid) {
+                this.setSendEmailWhenPublished('free');
+            } else if (!isFree && isPaid) {
+                this.setSendEmailWhenPublished('paid');
+            } else if (!isFree && !isPaid) {
+                this.setSendEmailWhenPublished('none');
+            }
         }
     },
 
-    // API only accepts dates at least 2 mins in the future, default the
     // scheduled date 5 mins in the future to avoid immediate validation errors
     _getMinDate() {
         return moment.utc().add(5, 'minutes');
     }
+    // API only accepts dates at least 2 mins in the future, default the
 });

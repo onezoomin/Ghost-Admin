@@ -18,7 +18,8 @@
     -moz-font-feature-settings: "liga" on;
 }
 
-.koenig-editor__editor.__has-no-content:after {
+.koenig-editor__editor.__has-no-content:after,
+.koenig-text-replacement-html-input__editor.__has-no-content:after{
     font-family: georgia,serif;
     font-weight: 300;
     letter-spacing: .02rem;
@@ -504,7 +505,7 @@
 .koenig-editor__editor code {
     border-radius: 2px;
     color: var(--darkgrey-d2);
-    font-size: 1.65rem;
+    font-size: .8em;
     line-height: 1em;
     padding: .4rem .4rem .2rem;
     vertical-align: middle;
@@ -683,8 +684,7 @@
 }
 
 .kg-card-selected,
-.kg-card-selected:hover
- {
+.kg-card-selected:hover {
     box-shadow: 0 0 0 2px var(--blue);
 }
 
@@ -800,8 +800,43 @@
     background: var(--whitegrey-l1);
 }
 
-.kg-cardmenu-card-selected div {
-    color: var(--darkgrey);
+.kg-cardmenu-card-hover .kg-cardmenu-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity ease-in-out 0.15s;
+    padding: 5px;
+    margin-top: -2px;
+    margin-bottom: -2px;
+    margin-left: auto;
+    margin-right: 8px;
+    border-radius: 3px;
+}
+
+.kg-cardmenu-card-hover:hover svg [data-selector="bg"] {
+    fill: #fff;
+}
+
+.kg-cardmenu-card-hover:hover .kg-cardmenu-action-icon {
+    opacity: 1.0;
+}
+
+.kg-cardmenu-card-hover .kg-cardmenu-action-icon:hover {
+    background: var(--whitegrey-d1);
+}
+
+.kg-cardmenu-card-hover .kg-cardmenu-action-icon svg {
+    margin: 0;
+    height: 1em;
+}
+
+.kg-cardmenu-card-hover .kg-cardmenu-action-icon svg path {
+    fill: var(--red);
+}
+
+.kg-cardmenu-card-hover .kg-cardmenu-action-icon:hover svg path {
+    fill: var(--red);
 }
 
 /* Padded container housing title + editor canvas, scrollable content */
@@ -856,24 +891,57 @@
 
 /* Chrome has a bug with its scrollbars on this element which has been reported here: https://bugs.chromium.org/p/chromium/issues/detail?id=697381 */
 .koenig-cardmenu {
-    width: 272px;
-    max-height: 500px;
+    width: 312px;
+    max-height: 376px;
+    padding-top: 0;
     background-clip: padding-box;
     z-index: 9999999; /* have to compete with codemirror */
     left: -16px;
+    top: -10px;
 }
 
+/*Firefox has a bug with padding-bottom being ignored when using overflow:auto which has been reported here: https://bugzilla.mozilla.org/show_bug.cgi?id=748518. Below solution works cross browsers*/
+.koenig-cardmenu:after {
+    content: "";
+    padding: .8rem;
+    display: block;
+}
 
 /* Cards
 /* --------------------------------------------------------------- */
+
+.kg-card-help {
+    background: color-mod(var(--lightgrey) l(+3%));
+    margin: 12px -13px -9px;
+    padding: 6px;
+}
+
+.kg-card-help p {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 1.4rem;
+    color: var(--midlightgrey);
+}
+
+.kg-card-help a.kg-card-help-icon-link {
+    text-decoration: none;
+    box-shadow: none;
+    padding-bottom: 2px;
+}
+
+.kg-card-help svg {
+    width: 1.4rem;
+}
+
 .kg-bookmark-card {
     width: 100%;
     box-sizing: border-box;
     border: 1px solid var(--whitegrey);
     background: var(--white);
+    border-radius: 4px;
 }
 
-.koenig-editor__editor .kg-bookmark-container {
+.kg-bookmark-container {
     display: flex;
     color: var(--darkgrey);
     text-decoration: none;
@@ -905,7 +973,7 @@
     display: -webkit-box;
     font-size: 1.4rem;
     line-height: 1.5em;
-    margin-top: 10px;
+    margin-top: 3px;
     color: var(--middarkgrey);
     font-weight: 400;
     max-height: 44px;
@@ -927,6 +995,8 @@
     position: absolute;
     top: 0;
     left: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 .kg-bookmark-metadata {
@@ -935,7 +1005,7 @@
     font-weight: 500;
     display: flex;
     align-items: center;
-    margin-top: 14px;
+    margin-top: 22px;
 }
 
 .kg-bookmark-icon {
@@ -944,19 +1014,28 @@
     margin-right: 6px;
 }
 
-.kg-bookmark-author:after {
-    content: "•";
-    margin: 0 6px;
-}
-
 .kg-bookmark-publisher {
-    color: var(--blue);
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 240px;
     white-space: nowrap;
     display: block;
     line-height: 1.65em;
+}
+
+.kg-bookmark-author:before {
+    content: "•";
+    color: var(--darkgrey);
+    margin: 0 6px;
+}
+
+.kg-bookmark-author {
+    color: var(--middarkgrey);
+    font-weight: 400;
+}
+
+.kg-email-card p:first-of-type {
+    margin-top: 0;
 }
 
 

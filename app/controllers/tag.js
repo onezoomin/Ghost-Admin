@@ -7,7 +7,7 @@ import {inject as service} from '@ember/service';
 import {slugify} from '@tryghost/string';
 import {task} from 'ember-concurrency';
 
-const SCRATCH_PROPS = ['name', 'slug', 'description', 'metaTitle', 'metaDescription'];
+const SCRATCH_PROPS = ['name', 'slug', 'description', 'metaTitle', 'metaDescription', 'ogTitle', 'ogDescription', 'twitterTitle', 'twitterDescription', 'codeinjectionHead', 'codeinjectionFoot'];
 
 export default Controller.extend({
     notifications: service(),
@@ -28,12 +28,17 @@ export default Controller.extend({
             this._saveTagProperty(propKey, value);
         },
 
-        toggleDeleteTagModal() {
-            this.toggleProperty('showDeleteTagModal');
+        openDeleteTagModal() {
+            this.set('showDeleteTagModal', true);
+        },
+
+        closeDeleteTagModal() {
+            this.set('showDeleteTagModal', false);
         },
 
         deleteTag() {
             return this.tag.destroyRecord().then(() => {
+                this.set('showDeleteTagModal', false);
                 return this.transitionToRoute('tags');
             }, (error) => {
                 return this.notifications.showAPIError(error, {key: 'tag.delete'});
@@ -83,6 +88,9 @@ export default Controller.extend({
         tag.setProperties(scratchProps);
 
         try {
+            if (tag.get('errors').length !== 0) {
+                return;
+            }
             yield tag.save();
 
             // replace 'new' route with 'tag' route
@@ -94,7 +102,7 @@ export default Controller.extend({
                 this.notifications.showAPIError(error, {key: 'tag.save'});
             }
         }
-    }),
+    }).drop(),
 
     fetchTag: task(function* (slug) {
         this.set('isLoading', true);

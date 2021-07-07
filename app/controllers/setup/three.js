@@ -1,5 +1,7 @@
 /* eslint-disable ghost/ember/alias-model-in-controller */
 import Controller, {inject as controller} from '@ember/controller';
+// TODO: remove usage of Ember Data's private `Errors` class when refactoring validations
+// eslint-disable-next-line
 import DS from 'ember-data';
 import Ember from 'ember';
 import RSVP from 'rsvp';
@@ -230,7 +232,7 @@ export default Controller.extend({
             invitationsString = erroredEmails.length > 1 ? ' invitations: ' : ' invitation: ';
             message = `Failed to send ${erroredEmails.length} ${invitationsString}`;
             message += Ember.Handlebars.Utils.escapeExpression(erroredEmails.join(', '));
-            message += '. Please check your email configuration, see <a href=\'https://ghost.org/docs/concepts/config/#mail\' target=\'_blank\'>https://ghost.org/docs/concepts/config/#mail</a> for instructions';
+            message += '. Please check your email configuration, see <a href=\'https://ghost.org/docs/config/#mail\' target=\'_blank\'>https://ghost.org/docs/config/#mail</a> for instructions';
 
             message = htmlSafe(message);
             notifications.showAlert(message, {type: 'error', delayed: successCount > 0, key: 'signup.send-invitations.failed'});

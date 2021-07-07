@@ -14,7 +14,7 @@ export default Service.extend(Evented, {
     // tour items need to be centrally defined here so that we have a single
     // source of truth for marking all tour items as viewed
     //
-    // a {{gh-tour-item "unique-id"}} component can be inserted in any template,
+    // a <GhTourItem @trobberId="unique-id"/> component can be inserted in any template,
     // this will use the tour service to grab content and determine visibility
     // with the component in control of rendering the throbber/controlling the
     // modal - this allows the component lifecycle hooks to perform automatic
@@ -60,7 +60,7 @@ export default Service.extend(Evented, {
         }, {
             id: 'upload-a-theme',
             title: 'Customising your publication',
-            message: 'Using custom themes you can completely control the look and feel of your site to suit your brand. Here\'s a full guide to help: <strong><a href="https://ghost.org/docs/api/handlebars-themes/" target="_blank">https://ghost.org/docs/api/handlebars-themes/</a></strong>'
+            message: 'Using custom themes you can completely control the look and feel of your site to suit your brand. Here\'s a full guide to help: <strong><a href="https://ghost.org/docs/themes/" target="_blank">https://ghost.org/docs/themes/</a></strong>'
         }];
     },
 
@@ -97,7 +97,7 @@ export default Service.extend(Evented, {
     },
 
     // returns throbber content for a given ID only if that throbber hasn't been
-    // viewed. Used by the {{gh-tour-item}} component to determine visibility
+    // viewed. Used by the <GhTourItem /> component to determine visibility
     activeThrobber(id) {
         let activeThrobbers = this._activeThrobbers;
         return activeThrobbers.findBy('id', id);

@@ -8,12 +8,8 @@ import {
     IMAGE_MIME_TYPES
 } from 'ghost-admin/components/gh-image-uploader';
 import {computed} from '@ember/object';
-import {htmlSafe} from '@ember/string';
-import {run} from '@ember/runloop';
 import {inject as service} from '@ember/service';
 import {task} from 'ember-concurrency';
-
-const ICON_EXTENSIONS = ['ico', 'png'];
 
 function randomPassword() {
     let word = generatePassword(6);
@@ -31,8 +27,6 @@ export default Controller.extend({
     ui: service(),
 
     availableTimezones: null,
-    iconExtensions: null,
-    iconMimeTypes: 'image/png,image/x-icon',
     imageExtensions: IMAGE_EXTENSIONS,
     imageMimeTypes: IMAGE_MIME_TYPES,
     _scratchFacebook: null,
@@ -40,7 +34,6 @@ export default Controller.extend({
 
     init() {
         this._super(...arguments);
-        this.iconExtensions = ICON_EXTENSIONS;
     },
 
     privateRSSUrl: computed('config.blogUrl', 'settings.publicHash', function () {
@@ -50,26 +43,13 @@ export default Controller.extend({
         return `${blogUrl}/${publicHash}/rss`;
     }),
 
-    backgroundStyle: computed('settings.brand.primaryColor', function () {
-        let color = this.get('settings.brand.primaryColor') || '#ffffff';
-        return htmlSafe(`background-color: ${color}`);
-    }),
-
-    brandColor: computed('settings.brand.primaryColor', function () {
-        let color = this.get('settings.brand.primaryColor');
-        if (color && color[0] === '#') {
-            return color.slice(1);
-        }
-        return color;
-    }),
-
     actions: {
         save() {
             this.save.perform();
         },
 
         setTimezone(timezone) {
-            this.set('settings.activeTimezone', timezone.name);
+            this.set('settings.timezone', timezone.name);
         },
 
         removeImage(image) {
@@ -135,8 +115,8 @@ export default Controller.extend({
                 this.set('leaveSettingsTransition', transition);
 
                 // if a save is running, wait for it to finish then transition
-                if (this.get('save.isRunning')) {
-                    return this.get('save.last').then(() => {
+                if (this.save.isRunning) {
+                    return this.save.last.then(() => {
                         transition.retry();
                     });
                 }
@@ -199,10 +179,8 @@ export default Controller.extend({
                     throw 'invalid url';
                 }
 
-                this.set('settings.facebook', '');
-                run.schedule('afterRender', this, function () {
-                    this.set('settings.facebook', newUrl);
-                });
+                this.settings.set('facebook', newUrl);
+                this.settings.notifyPropertyChange('facebook');
             } catch (e) {
                 if (e === 'invalid url') {
                     errMessage = 'The URL must be in a format like '
@@ -257,53 +235,14 @@ export default Controller.extend({
 
                 newUrl = `https://twitter.com/${username}`;
 
-                this.get('settings.hasValidated').pushObject('twitter');
-
-                this.set('settings.twitter', '');
-                run.schedule('afterRender', this, function () {
-                    this.set('settings.twitter', newUrl);
-                });
+                this.settings.get('hasValidated').pushObject('twitter');
+                this.settings.set('twitter', newUrl);
+                this.settings.notifyPropertyChange('twitter');
             } else {
                 errMessage = 'The URL must be in a format like '
                            + 'https://twitter.com/yourUsername';
                 this.get('settings.errors').add('twitter', errMessage);
                 this.get('settings.hasValidated').pushObject('twitter');
-                return;
-            }
-        },
-        validateBrandColor() {
-            let newColor = this.get('brandColor');
-            let oldColor = this.get('settings.brand.primaryColor');
-            let errMessage = '';
-
-            // reset errors and validation
-            this.get('settings.errors').remove('brandColor');
-            this.get('settings.hasValidated').removeObject('brandColor');
-
-            if (newColor === '') {
-                // Clear out the brand color
-                this.set('settings.brand.primaryColor', '');
-                return;
-            }
-
-            // brandColor will be null unless the user has input something
-            if (!newColor) {
-                newColor = oldColor;
-            }
-
-            if (newColor[0] !== '#') {
-                newColor = `#${newColor}`;
-            }
-
-            if (newColor.match(/#[0-9A-Fa-f]{6}$/)) {
-                this.set('settings.brand.primaryColor', '');
-                run.schedule('afterRender', this, function () {
-                    this.set('settings.brand.primaryColor', newColor);
-                });
-            } else {
-                errMessage = 'The color should be in valid hex format';
-                this.get('settings.errors').add('brandColor', errMessage);
-                this.get('settings.hasValidated').pushObject('brandColor');
                 return;
             }
         }
@@ -324,6 +263,14 @@ export default Controller.extend({
     save: task(function* () {
         let notifications = this.notifications;
         let config = this.config;
+
+        if (this.settings.get('twitter') !== this._scratchTwitter) {
+            this.send('validateTwitterUrl');
+        }
+
+        if (this.settings.get('facebook') !== this._scratchFacebook) {
+            this.send('validateFacebookUrl');
+        }
 
         try {
             let settings = yield this.settings.save();
